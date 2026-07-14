@@ -4,7 +4,7 @@
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const identity = {
-  name: 'S. M. Marzanul Hoque',
+  name: '<S. M. Marzanul Hoque/>',
   role: 'Junior Software Engineer',
   pitch: 'I develop end-to-end web applications, handling everything from databases and APIs to responsive user interfaces, deployment, and monitoring. I enjoy building scalable, high-performance solutions that solve real-world problems.',
   availability: 'Currently available for new opportunities.',
