@@ -4,7 +4,51 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>scaffold</title>
+    <meta name="theme-color" content="#0c0c14" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f7f7fd" />
+    <script>
+      // theme init before paint: saved preference wins, otherwise dark
+      if (localStorage.getItem('theme') !== 'light') {
+        document.documentElement.classList.add('dark')
+      }
+    </script>
+
+    <title>Marzanul Hoque — Software Engineer</title>
+    <meta name="description" content="Portfolio of Marzanul Hoque, software engineer building fast, reliable web applications." />
+    <meta name="author" content="Marzanul Hoque" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://marzanulhoque.github.io/" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://marzanulhoque.github.io/" />
+    <meta property="og:site_name" content="Marzanul Hoque — Portfolio" />
+    <meta property="og:title" content="Marzanul Hoque — Software Engineer" />
+    <meta property="og:description" content="Portfolio of Marzanul Hoque, software engineer building fast, reliable web applications." />
+    <meta property="og:image" content="https://marzanulhoque.github.io/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Marzanul Hoque — Software Engineer" />
+    <meta name="twitter:description" content="Portfolio of Marzanul Hoque, software engineer building fast, reliable web applications." />
+    <meta name="twitter:image" content="https://marzanulhoque.github.io/og-image.jpg" />
+
+    <!-- structured data -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Marzanul Hoque",
+        "jobTitle": "Software Engineer",
+        "url": "https://marzanulhoque.github.io/",
+        "image": "https://marzanulhoque.github.io/og-image.jpg",
+        "email": "mailto:you@example.com",
+        "knowsAbout": ["TypeScript", "React", "Node.js"],
+        "sameAs": ["https://github.com/MarzanulHoque"]
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
