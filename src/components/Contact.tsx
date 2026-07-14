@@ -5,7 +5,7 @@ export default function Contact() {
   const channels = [
     { label: 'GitHub', url: links.github },
     { label: 'LinkedIn', url: links.linkedin },
-    { label: 'Upwork', url: links.upwork },
+   // { label: 'Upwork', url: links.upwork },
   ].filter((c) => c.url)
 
   return (
