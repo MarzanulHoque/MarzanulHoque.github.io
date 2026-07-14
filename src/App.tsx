@@ -1,5 +1,9 @@
 import { usePointerGlow } from './hooks/usePointerGlow'
 import GlobalFX from './components/GlobalFX'
+import Nav from './components/Nav'
+import ScrollIdentity from './components/ScrollIdentity'
+import BackToTop from './components/BackToTop'
+import Footer from './components/Footer'
 import Hero from './components/Hero'
 import About from './components/About'
 import Skills from './components/Skills'
@@ -25,6 +29,8 @@ export default function App() {
         }}
       />
       <GlobalFX />
+      <Nav />
+      <ScrollIdentity />
       <main className="relative z-10">
         <Hero />
         <About />
@@ -36,6 +42,8 @@ export default function App() {
         <Education />
         <Contact />
       </main>
+      <Footer />
+      <BackToTop />
     </>
   )
 }
