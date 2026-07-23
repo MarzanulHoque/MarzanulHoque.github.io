@@ -10,10 +10,6 @@ const P = ({ children }: { children: ReactNode }) => <span className="text-[#abb
 
 export default function Hero() {
   const ref = useReveal<HTMLElement>()
-  const initials = identity.name
-    .split(' ')
-    .map((w) => w[0])
-    .join('')
   const topSkills = skillGroups.flatMap((g) => g.skills).slice(0, 3)
 
   return (
@@ -25,13 +21,7 @@ export default function Hero() {
       <div className="relative z-10 mx-auto grid max-w-5xl gap-12 px-6 pb-20 pt-32 sm:pt-40 lg:grid-cols-2 lg:items-center">
         {/* left: identity */}
         <div className="reveal">
-          <div
-            className="bg-grad flex h-20 w-20 items-center justify-center rounded-2xl text-2xl font-extrabold text-white"
-            aria-hidden="true"
-          >
-            {initials}
-          </div>
-          <h1 className="mt-6 text-4xl font-extrabold tracking-tight sm:text-5xl">
+          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
             <span className="text-grad">{identity.name}</span>
           </h1>
           <p className="mt-3 font-mono text-lg text-vio">{identity.role}</p>
