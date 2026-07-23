@@ -71,6 +71,16 @@ export const projects = [
     stack: ['ASP.NET Core 8', 'C#', 'Entity Framework Core', 'MySQL', 'JWT', 'FluentValidation', 'AutoMapper', 'Quartz'],
   },
   {
+    name: 'ShiftLedger',
+    context: 'Bike service shop management system · Personal project',
+    description: 'A shop-management tool for bike service businesses covering service job tracking, task-wise billing, and reporting. Built with Clean Architecture and CQRS (MediatR) on an ASP.NET Core/MySQL backend and a React 18 + TypeScript SPA, with JWT auth, Admin/Employee role-based access control, real-time notifications via SignalR, and PDF/Excel report exports.',
+    stack: ['ASP.NET Core', 'C#', 'MediatR', 'MySQL', 'EF Core', 'React', 'TypeScript', 'Mantine', 'SignalR', 'JWT'],
+    links: [
+      { label: 'Client Repo', url: 'https://github.com/MarzanulHoque/ShiftLedger-Client' },
+      { label: 'API Repo', url: 'https://github.com/MarzanulHoque/ShiftLedger-API' },
+    ],
+  },
+  {
     name: 'HRMS — Enterprise HR & Payroll Management System',
     context: 'Personal project',
     description: 'RESTful APIs for employee, attendance, leave, and payroll management built with Clean Architecture, CQRS (MediatR), and the Repository Pattern. Added JWT authentication, role-based authorization, FluentValidation, and AutoMapper, paired with a responsive Angular app using lazy loading, route guards, reactive forms, and RxJS.',
@@ -83,17 +93,7 @@ export const projects = [
     description: 'Full-stack dating platform with JWT authentication, profile management, photo uploads, and SignalR-based real-time chat. Built as a responsive SPA with reusable Angular components, using Entity Framework Core with SQLite for development and SQL Server compatibility for production, with GitHub Actions CI/CD for automated build, test, and deploy.',
     stack: ['C#', 'ASP.NET Core', 'Angular', 'JavaScript', 'Entity Framework Core', 'SQLite', 'SQL Server', 'SignalR', 'GitHub Actions'],
     links: [{ label: 'GitHub', url: 'https://github.com/MarzanulHoque/DateSphere' }],
-  },
-  {
-    name: 'ShiftLedger',
-    context: 'Bike service shop management system · Personal project',
-    description: 'A shop-management tool for bike service businesses covering service job tracking, task-wise billing, and reporting. Built with Clean Architecture and CQRS (MediatR) on an ASP.NET Core/MySQL backend and a React 18 + TypeScript SPA, with JWT auth, Admin/Employee role-based access control, real-time notifications via SignalR, and PDF/Excel report exports.',
-    stack: ['ASP.NET Core', 'C#', 'MediatR', 'MySQL', 'EF Core', 'React', 'TypeScript', 'Mantine', 'SignalR', 'JWT'],
-    links: [
-      { label: 'Client Repo', url: 'https://github.com/MarzanulHoque/ShiftLedger-Client' },
-      { label: 'API Repo', url: 'https://github.com/MarzanulHoque/ShiftLedger-API' },
-    ],
-  },
+  }
 ]
 
 // ── Optional sections: delete an array (and its section in App.tsx) if unused ──
