@@ -21,7 +21,7 @@ export default function Hero() {
       <div className="relative z-10 mx-auto grid max-w-5xl gap-12 px-6 pb-20 pt-32 sm:pt-40 lg:grid-cols-2 lg:items-center">
         {/* left: identity */}
         <div className="reveal">
-          <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl">
+          <h1 className="whitespace-nowrap text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
             <span className="text-grad">{identity.name}</span>
           </h1>
           <p className="mt-3 font-mono text-lg text-vio">{identity.role}</p>
