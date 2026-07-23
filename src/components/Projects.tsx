@@ -25,6 +25,21 @@ export default function Projects() {
                 </li>
               ))}
             </ul>
+            {project.links && (
+              <div className="mt-4 flex flex-wrap gap-4">
+                {project.links.map((link) => (
+                  <a
+                    key={link.url}
+                    href={link.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-mono text-xs font-semibold text-vio hover:underline"
+                  >
+                    {link.label} →
+                  </a>
+                ))}
+              </div>
+            )}
           </article>
         ))}
       </div>
