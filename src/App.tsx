@@ -9,8 +9,6 @@ import About from './components/About'
 import Skills from './components/Skills'
 import Experience from './components/Experience'
 import Projects from './components/Projects'
-import OpenSource from './components/OpenSource'
-import Testimonials from './components/Testimonials'
 import Education from './components/Education'
 import Contact from './components/Contact'
 
@@ -37,8 +35,6 @@ export default function App() {
         <Skills />
         <Experience />
         <Projects />
-        <OpenSource />
-        <Testimonials />
         <Education />
         <Contact />
       </main>
