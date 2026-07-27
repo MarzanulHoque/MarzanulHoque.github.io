@@ -20,7 +20,7 @@ export const links = {
 // Hero stats (value + label). Keep to ~3.
 export const stats = [
   { value: '2+', label: 'years of experience' },
-  { value: '2', label: 'projects shipped' },
+  { value: '6', label: 'projects built' },
   { value: '10+', label: 'technologies used' },
 ]
 
@@ -57,6 +57,15 @@ export const experience = [
 ]
 
 export const projects = [
+
+  {
+    name: 'Altios GoGlobal — IC Management Platform',
+    context: 'Enterprise global-mobility & payments platform · Client project via Bizzntek Ltd. · Shipped',
+    description: 'Contributing to a three-tier .NET 8 platform (UI, business-logic API, and data-access API) for global contractor and vendor management, covering vendor invoicing, cross-border payments, and ERP integrations. Work spans the ASP.NET Core MVC front end, the business-logic layer, and the EF Core/MySQL data-access API, built on clean architecture with repository/unit-of-work patterns, JWT authentication, and encrypted inter-service communication.',
+    stack: ['ASP.NET Core 8', 'C#', 'Entity Framework Core', 'MySQL', 'JWT', 'FluentValidation', 'AutoMapper', 'Quartz'],
+    links: [{ label: 'Live Site', url: 'https://altios.ai/  ' }],
+  },
+
   {
     name: 'Piramids',
     context: 'Enterprise ERP platform · Construction, rental & hospitality · Client project via Bizzntek Ltd. · Shipped',
@@ -64,11 +73,13 @@ export const projects = [
     stack: ['ASP.NET Core 8', 'ASP.NET MVC', 'C#', 'Entity Framework Core', 'MySQL', 'JavaScript', 'jQuery'],
     links: [{ label: 'Live Site', url: 'https://piramids.com/' }],
   },
+  
   {
-    name: 'Altios GoGlobal — IC Management Platform',
-    context: 'Enterprise global-mobility & payments platform · Client project via Bizzntek Ltd. · Shipped',
-    description: 'Contributing to a three-tier .NET 8 platform (UI, business-logic API, and data-access API) for global contractor and vendor management, covering vendor invoicing, cross-border payments, and ERP integrations. Work spans the ASP.NET Core MVC front end, the business-logic layer, and the EF Core/MySQL data-access API, built on clean architecture with repository/unit-of-work patterns, JWT authentication, and encrypted inter-service communication.',
-    stack: ['ASP.NET Core 8', 'C#', 'Entity Framework Core', 'MySQL', 'JWT', 'FluentValidation', 'AutoMapper', 'Quartz'],
+    name: 'DotNetScaffold',
+    context: 'ASP.NET Core scaffolding & CRUD generator CLI · Personal project',
+    description: 'A dotnet CLI tool that scaffolds a full ASP.NET Core backend — Layered (DAL/BLL/API) or Clean Architecture (Domain/Application/Infrastructure/Web) — then generates CRUD (DTOs, repositories/services, controllers, and tests) for every entity in your EF Core model. Reads entity and relationship metadata (1:N, 1:1, self-referencing, m2m) via reflection against the built assembly, renders output through a Scriban templating engine, and wires in NetArchTest-based architecture tests so layering violations fail dotnet test instead of slipping into review. Packaged as a real dotnet tool, with a transactional file writer so a failed generation rolls back cleanly rather than leaving partial output.',
+    stack: ['C#', '.NET 8', 'System.CommandLine', 'EF Core', 'Scriban', 'NetArchTest', 'xUnit', 'dotnet tool'],
+    links: [{ label: 'GitHub', url: 'https://github.com/MarzanulHoque/DotNetScaffold' }],
   },
   {
     name: 'ShiftLedger',
