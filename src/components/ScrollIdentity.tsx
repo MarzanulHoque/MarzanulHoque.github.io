@@ -15,7 +15,7 @@ export default function ScrollIdentity() {
 
   return (
     <aside
-      className={`fixed left-6 top-1/2 z-40 hidden w-56 -translate-y-1/2 transition-all duration-500 2xl:block ${
+      className={`fixed right-[calc(50%+32.5rem)] top-1/2 z-40 hidden w-[clamp(14rem,14vw,20rem)] -translate-y-1/2 transition-all duration-500 2xl:block ${
         show ? 'translate-x-0 opacity-100' : '-translate-x-8 opacity-0'
       }`}
     >
