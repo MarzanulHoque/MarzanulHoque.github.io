@@ -13,13 +13,30 @@ export default function ScrollIdentity() {
     return () => observer.disconnect()
   }, [])
 
+  const [avatarError, setAvatarError] = useState(false)
+
   return (
     <aside
-      className={`fixed right-[calc(50%+32.5rem)] top-1/2 z-40 hidden w-[clamp(14rem,14vw,20rem)] -translate-y-1/2 transition-all duration-500 2xl:block ${
-        show ? 'translate-x-0 opacity-100' : '-translate-x-8 opacity-0'
+      className={`fixed left-6 top-1/2 z-40 hidden w-56 -translate-y-1/2 transition-all duration-500 xl:block ${
+        show ? 'translate-x-0 opacity-100' : '-translate-x-12 opacity-0 pointer-events-none'
       }`}
     >
       <div className="rounded-2xl border border-line bg-panel p-5 text-center shadow-lg">
+        {/* Compact Avatar */}
+        <div className="mx-auto mb-3 h-16 w-16 overflow-hidden rounded-full border border-line p-[2px]">
+          {!avatarError && identity.avatar ? (
+            <img
+              src={identity.avatar}
+              alt={identity.name}
+              onError={() => setAvatarError(true)}
+              className="h-full w-full rounded-full object-cover"
+            />
+          ) : (
+            <div className="flex h-full w-full items-center justify-center rounded-full bg-panel-2 font-mono text-xs font-bold text-grad">
+              {identity.name.split(' ').map((n) => n[0]).join('').slice(0, 3)}
+            </div>
+          )}
+        </div>
         <p className="text-sm font-bold">{identity.name}</p>
         <p className="mt-0.5 font-mono text-xs text-mut">{identity.role}</p>
         <div className="mt-3 flex items-center justify-center gap-2">

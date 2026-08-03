@@ -1,8 +1,8 @@
+import { useState, type ReactNode } from 'react'
 import { useReveal } from '../hooks/useReveal'
 import { identity, skillGroups, stats } from '../data/profile'
 
 /* tiny syntax-highlight helpers for the fake IDE card */
-import type { ReactNode } from 'react'
 const K = ({ children }: { children: ReactNode }) => <span className="text-[#c678dd]">{children}</span>
 const T = ({ children }: { children: ReactNode }) => <span className="text-[#e5c07b]">{children}</span>
 const S = ({ children }: { children: ReactNode }) => <span className="text-[#98c379]">{children}</span>
@@ -11,6 +11,7 @@ const P = ({ children }: { children: ReactNode }) => <span className="text-[#abb
 export default function Hero() {
   const ref = useReveal<HTMLElement>()
   const topSkills = skillGroups.flatMap((g) => g.skills).slice(0, 3)
+  const [avatarError, setAvatarError] = useState(false)
 
   return (
     <section id="top" ref={ref} className="relative overflow-hidden">
@@ -21,6 +22,31 @@ export default function Hero() {
       <div className="relative z-10 mx-auto grid max-w-5xl gap-12 px-6 pb-20 pt-32 sm:pt-40 lg:grid-cols-2 lg:items-center">
         {/* left: identity */}
         <div className="reveal">
+          {/* Avatar frame */}
+          <div className="mb-6 inline-block">
+            <div className="group relative h-24 w-24 sm:h-28 sm:w-28 cursor-pointer">
+              {/* Outer glowing halo */}
+              <div className="absolute -inset-1.5 rounded-full bg-grad opacity-70 blur-md transition-all duration-500 group-hover:opacity-100 group-hover:blur-lg" />
+              {/* Animated gradient ring */}
+              <div className="absolute -inset-[2px] rounded-full bg-grad transition-transform duration-500 group-hover:scale-105" />
+              {/* Inner container */}
+              <div className="relative h-full w-full overflow-hidden rounded-full border-2 border-ink bg-panel p-[2px]">
+                {!avatarError && identity.avatar ? (
+                  <img
+                    src={identity.avatar}
+                    alt={identity.name}
+                    onError={() => setAvatarError(true)}
+                    className="h-full w-full rounded-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center rounded-full bg-panel-2 font-mono text-xl font-bold text-grad">
+                    {identity.name.split(' ').map((n) => n[0]).join('').slice(0, 3)}
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
           <h1 className="whitespace-nowrap text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
             <span className="text-grad">{identity.name}</span>
           </h1>

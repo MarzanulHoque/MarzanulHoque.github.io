@@ -3,11 +3,14 @@
 // components never hardcode content. See PORTFOLIO_KNOWLEDGEBASE.md §4 / §14.
 // ─────────────────────────────────────────────────────────────────────────────
 
+import avatarImg from '../assets/Gemini_Generated_Image_20cz0520cz0520cz.png'
+
 export const identity = {
   name: 'S. M. Marzanul Hoque',
   role: 'Junior Software Engineer',
   pitch: 'Software engineer specializing in C#, .NET Core, JavaScript, Entity Framework Core, MySQL, Docker, Linux, and AWS cloud infrastructure. I enjoy building scalable, high-performance applications and continuously expanding my expertise in modern software development and DevOps practices.',
   availability: 'Currently available for new opportunities.',
+  avatar: avatarImg,
 }
 
 export const links = {
