@@ -23,7 +23,7 @@ export const links = {
 // Hero stats (value + label). Keep to ~3.
 export const stats = [
   { value: '2+', label: 'years of experience' },
-  { value: '6', label: 'projects built' },
+  { value: '7', label: 'projects built' },
   { value: '10+', label: 'technologies used' },
 ]
 
@@ -60,7 +60,6 @@ export const experience = [
 ]
 
 export const projects = [
-
   {
     name: 'Altios GoGlobal — IC Management Platform',
     context: 'Enterprise global-mobility & payments platform · Client project via Bizzntek Ltd. · Shipped',
@@ -75,6 +74,14 @@ export const projects = [
     description: 'Key contributor to an enterprise ERP platform covering project management, customer onboarding, task scheduling, contract management, and financial workflows. Built and maintained secure RESTful APIs with server-side pagination, dynamic filtering, reporting, and dashboard endpoints for large datasets, optimized MySQL stored procedures and Dapper queries, added in-memory caching, and implemented menu-based access control and subscription-based feature management.',
     stack: ['ASP.NET Core 8', 'ASP.NET MVC', 'C#', 'Entity Framework Core', 'MySQL', 'JavaScript', 'jQuery'],
     links: [{ label: 'Live Site', url: 'https://piramids.com/' }],
+  },
+
+  {
+    name: 'TallyNest — Sales & Accounting Software',
+    context: 'Full-stack sales management, invoicing & inventory system · Personal project · Shipped',
+    description: 'Modern sales and accounting web application providing complete end-to-end management for inventory stock, invoices, purchases, payments, and financial reporting. Built with Next.js App Router, React 19, Prisma ORM, PostgreSQL database, and NextAuth authentication with role-based access control, backed by Playwright E2E test suites.',
+    stack: ['Next.js 16', 'React 19', 'TypeScript', 'Prisma', 'PostgreSQL', 'NextAuth', 'Zod', 'Tailwind CSS', 'Playwright'],
+    links: [{ label: 'Live Site', url: 'https://tallynest.vercel.app/' }],
   },
   
   {
