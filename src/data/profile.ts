@@ -37,9 +37,9 @@ export const skillGroups = [
   { title: 'Languages', skills: ['C#', 'JavaScript', 'Python', 'C', 'C++'] },
   { title: 'Frontend', skills: ['React', 'Angular'] },
   { title: 'Backend', skills: ['ASP.NET Core', '.NET MVC', 'Entity Framework Core', 'Dapper', 'REST APIs'] },
-  { title: 'Databases', skills: ['MySQL', 'SQLite', 'SQL Server'] },
-  { title: 'Cloud & DevOps', skills: ['AWS', 'Docker', 'Linux', 'CI/CD'] },
-  { title: 'Tools & Practices', skills: ['Git', 'GitHub', 'Azure Repos', 'Visual Studio', 'Visual Studio Code', 'Postman'] },
+  { title: 'Databases', skills: ['MySQL', 'SQLite', 'Microsoft SQL Server'] },
+  { title: 'Cloud & DevOps', skills: ['AWS', 'Docker','Kubernetes', 'Networking','Linux', 'CI/CD','Azure DevOps','Azure Boards','Azure Repos'] },
+  { title: 'Tools & Practices', skills: ['Git', 'GitHub', 'Visual Studio', 'Visual Studio Code', 'Postman','Jira'] },
   { title: 'AI Tools & Assistants', skills: ['GitHub Copilot', 'Claude CLI', 'AI-Driven Development'] },
 ]
 
