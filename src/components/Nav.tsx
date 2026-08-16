@@ -5,6 +5,7 @@ import { identity } from '../data/profile'
 const sections = [
   { id: 'about', label: 'About' },
   { id: 'skills', label: 'Skills' },
+  { id: 'devops', label: 'DevOps' },
   { id: 'experience', label: 'Experience' },
   { id: 'projects', label: 'Projects' },
   { id: 'contact', label: 'Contact' },

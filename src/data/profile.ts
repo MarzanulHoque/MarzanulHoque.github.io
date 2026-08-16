@@ -61,6 +61,13 @@ export const experience = [
 
 export const projects = [
   {
+    name: 'Multi-Tier Containerized E-Commerce Platform',
+    context: 'Production-grade microservices deployment on AWS EC2 · DevOps & Cloud Architecture · Shipped',
+    description: 'Architecture and automated deployment of a decoupled, 4-tier e-commerce web platform on AWS EC2 using Docker, Docker Compose, Nginx reverse proxy, Node.js/Express REST API, and PostgreSQL. Features zero-downtime healthcheck awareness (`service_healthy`), dynamic secret ingestion from AWS SSM Parameter Store (`/prod/ecommerce/db_password`), persistent named volume storage (`pg_data`), GHCR container registry publishing, and an automated bash deployment script (`deploy-ec2.sh`) with IMDSv2 metadata auto-detection.',
+    stack: ['Docker', 'Docker Compose', 'AWS EC2', 'AWS SSM', 'Nginx', 'Node.js', 'PostgreSQL', 'GHCR', 'Bash', 'Git'],
+    links: [{ label: 'GitHub', url: 'https://github.com/MarzanulHoque/docker-multi-tier-ecommerce' }],
+  },
+  {
     name: 'Altios GoGlobal — IC Management Platform',
     context: 'Enterprise global-mobility & payments platform · Client project via Bizzntek Ltd. · Shipped',
     description: 'Contributing to a three-tier .NET 8 platform (UI, business-logic API, and data-access API) for global contractor and vendor management, covering vendor invoicing, cross-border payments, and ERP integrations. Work spans the ASP.NET Core MVC front end, the business-logic layer, and the EF Core/MySQL data-access API, built on clean architecture with repository/unit-of-work patterns, JWT authentication, and encrypted inter-service communication.',
