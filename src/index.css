@@ -212,3 +212,19 @@ body {
     display: none;
   }
 }
+
+/* Dim background content when modal is active, keeping Navbar and ScrollIdentity visible */
+body.modal-open main > section:not(#devops),
+body.modal-open footer,
+body.modal-open #glow-layer,
+body.modal-open [aria-label="Back to top"] {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
+body.modal-open #devops-modal {
+  visibility: visible !important;
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}

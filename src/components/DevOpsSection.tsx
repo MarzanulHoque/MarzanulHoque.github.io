@@ -1,438 +1,271 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Section from './Section'
 import { cardGlow } from '../hooks/usePointerGlow'
 
-interface PipelineStep {
+interface DevOpsProject {
   id: string
-  name: string
-  tool: string
-  status: 'passed' | 'running' | 'queued'
-  duration: string
-  details: string
-  logs: string[]
-}
-
-interface InfraNode {
-  id: string
-  name: string
-  category: 'Cloud Infrastructure' | 'CI/CD & Repository' | 'Container & Runtime' | 'Monitoring & OS'
-  icon: string
-  provider: 'AWS' | 'Azure' | 'Docker/K8s' | 'Linux'
-  description: string
-  metrics: string
+  title: string
+  subtitle: string
+  badge: string
+  githubUrl: string
+  overviewArticle: string[]
+  prerequisites: string[]
   tags: string[]
 }
 
-const pipelineSteps: PipelineStep[] = [
-  {
-    id: 'source',
-    name: 'Code & Version Control',
-    tool: 'Git / GitHub / Azure Repos',
-    status: 'passed',
-    duration: '0.4s',
-    details: 'Triggered on git push `main`. Automated commit linting & security secrets scanning active.',
-    logs: [
-      '$ git log -1 --stat',
-      'commit e4f89a2 (head -> main, origin/main)',
-      'Author: S. M. Marzanul Hoque <marzanulhoque.cseru@gmail.com>',
-      'Secrets Scan: 0 leaks detected via gitleaks',
-      'Status: Code repository verified'
-    ]
-  },
-  {
-    id: 'build',
-    name: 'Build & Unit Testing',
-    tool: 'DotNet CLI & Scriban / xUnit',
-    status: 'passed',
-    duration: '14.2s',
-    details: 'Scaffold validation & dotnet build -c Release. Running unit & NetArchTest architecture constraints.',
-    logs: [
-      '$ dotnet test --configuration Release --logger "console;verbosity=detailed"',
-      'Determining projects to restore...',
-      'Passed! - Failed: 0, Passed: 42, Skipped: 0, Total: 42',
-      'NetArchTest Architecture Rule Verification: 100% compliant',
-      'Build succeeded in 14.2s'
-    ]
-  },
-  {
-    id: 'container',
-    name: 'Containerization & Image Packaging',
-    tool: 'Docker, Compose & GHCR',
-    status: 'passed',
-    duration: '22.8s',
-    details: 'Multi-stage Docker build for Frontend & Node REST API, pushed to GitHub Container Registry (GHCR).',
-    logs: [
-      '$ docker compose build --parallel',
-      '[frontend] Building static SPA web layer... Done',
-      '[backend]  Building Node.js Express REST API... Done',
-      '$ docker push ghcr.io/marzanulhoque/docker-multi-tier-ecommerce/backend:latest',
-      'Pushed 4 service containers to GHCR with zero vulnerabilities.'
-    ]
-  },
-  {
-    id: 'orchestration',
-    name: 'Service Health & Microservices',
-    tool: 'Nginx Proxy & Postgres Healthcheck',
-    status: 'passed',
-    duration: '8.5s',
-    details: 'Internal bridge network `app-network` with `service_healthy` dependent startup constraints.',
-    logs: [
-      '$ docker compose up -d',
-      'Creating network "app-network" with driver "bridge"',
-      'Creating volume "pg_data" with local driver',
-      'Container postgres-db  Healthy (pg_isready -U app_user)',
-      'Container backend-api  Started (depends_on: postgres:healthy)',
-      'Container nginx-proxy  Started (Port 80:80)'
-    ]
-  },
-  {
-    id: 'cloud',
-    name: 'AWS EC2 & SSM Secret Provisioning',
-    tool: 'AWS EC2, SSM & IMDSv2',
-    status: 'passed',
-    duration: '6.1s',
-    details: 'Idempotent shell deployment script (`deploy-ec2.sh`) pulling secrets from AWS SSM Parameter Store.',
-    logs: [
-      '$ ./deploy-ec2.sh',
-      '[INFO] Auto-detected AWS Region via IMDSv2 metadata token...',
-      '[INFO] Retrieved /prod/ecommerce/db_password securely into host memory',
-      '[INFO] Application stack healthy at http://ec2-instance-ip/',
-      'Deployment successfully completed in 37.4s'
-    ]
-  }
-]
+const devOpsProject: DevOpsProject = {
+  id: 'docker-ecommerce',
+  title: 'Multi-Tier Containerized E-Commerce Platform',
+  subtitle: 'Production Deployment Procedure & Microservices Architecture on AWS EC2',
+  badge: 'AWS EC2 & Docker Deployment',
+  githubUrl: 'https://github.com/MarzanulHoque/docker-multi-tier-ecommerce',
+  overviewArticle: [
+    'This project demonstrates an enterprise-grade, highly available, multi-tier e-commerce web platform deployed on AWS EC2 using Docker, Docker Compose, Nginx Reverse Proxy, Node.js/Express REST API, and PostgreSQL.',
+    'The core architectural goal was building a decoupled micro-service system with zero-downtime startup guarantees (`service_healthy` dependent initialization), dynamic memory secret retrieval via AWS SSM Parameter Store (eliminating hardcoded credentials), and containerizing static SPA & backend services into GitHub Container Registry (GHCR).'
+  ],
+  prerequisites: [
+    'AWS EC2 Instance (Ubuntu / Amazon Linux) with HTTP (80) & SSH (22) security groups',
+    'Docker Engine v20.10+ & Docker Compose v2.0+',
+    'AWS IAM Role attached to EC2 with AmazonSSMReadOnlyAccess',
+    'AWS SSM Parameter Store entry configured (/prod/ecommerce/db_password)'
+  ],
+  tags: ['Docker', 'Docker Compose', 'AWS EC2', 'AWS SSM', 'Nginx', 'Node.js', 'PostgreSQL', 'GHCR', 'Bash', 'Git']
+}
 
-const infraNodes: InfraNode[] = [
+const deploymentStages = [
   {
-    id: 'aws-ec2',
-    name: 'AWS EC2 & Elastic Beanstalk',
-    category: 'Cloud Infrastructure',
-    icon: '☁️',
-    provider: 'AWS',
-    description: 'High-availability compute instances hosting ASP.NET Core & Node services behind auto-scaling groups.',
-    metrics: '99.9% Uptime',
-    tags: ['Auto Scaling', 'VPC', 'Security Groups']
-  },
-  {
-    id: 'aws-rds',
-    name: 'AWS RDS (MySQL & SQL Server)',
-    category: 'Cloud Infrastructure',
-    icon: '🗄️',
-    provider: 'AWS',
-    description: 'Managed relational database clusters with automated multi-AZ replication, snapshots & query optimization.',
-    metrics: 'Multi-AZ Replication',
-    tags: ['MySQL', 'MS SQL', 'Automated Backups']
-  },
-  {
-    id: 'docker-k8s',
-    name: 'Docker & Kubernetes (k8s)',
-    category: 'Container & Runtime',
-    icon: '🐳',
-    provider: 'Docker/K8s',
-    description: 'Containerizing .NET and React applications with lightweight multi-stage builds and Kubernetes pod management.',
-    metrics: 'Zero-Downtime Rollouts',
-    tags: ['Microservices', 'Helm', 'Ingress Control']
-  },
-  {
-    id: 'azure-devops',
-    name: 'Azure DevOps & GitHub Actions',
-    category: 'CI/CD & Repository',
-    icon: '🔄',
-    provider: 'Azure',
-    description: 'Automated CI/CD pipelines connecting Azure Repos & Azure Boards to build, test, and ship code seamlessly.',
-    metrics: 'Automated Releases',
-    tags: ['Pipelines', 'Azure Boards', 'Artifacts']
-  },
-  {
-    id: 'linux-net',
-    name: 'Linux SysAdmin & Networking',
-    category: 'Monitoring & OS',
-    icon: '🐧',
-    provider: 'Linux',
-    description: 'Linux environment configuration (Ubuntu/Debian), Nginx reverse proxying, SSL/TLS, and DNS management.',
-    metrics: 'Hardened OS',
-    tags: ['Nginx', 'Bash Shell', 'SSH/TLS']
-  }
-]
-
-const terminalPresets = [
-  {
-    id: 'docker-ecommerce',
-    label: 'docker compose ps',
-    command: 'docker compose -f docker-compose.yml ps',
-    output: [
-      'NAME                IMAGE                                                                  COMMAND                  SERVICE    CREATED        STATUS                    PORTS',
-      'proxy               nginx:alpine                                                           "/docker-entrypoint.…"   proxy      2 hours ago    Up 2 hours (healthy)      0.0.0.0:80->80/tcp',
-      'frontend            ghcr.io/marzanulhoque/docker-multi-tier-ecommerce/frontend:latest      "docker-entrypoint.s…"   frontend   2 hours ago    Up 2 hours                ',
-      'backend             ghcr.io/marzanulhoque/docker-multi-tier-ecommerce/backend:latest       "docker-entrypoint.s…"   backend    2 hours ago    Up 2 hours                ',
-      'postgres            postgres:16-alpine                                                     "docker-entrypoint.s…"   postgres   2 hours ago    Up 2 hours (healthy)      '
+    stepNumber: '01',
+    title: 'Repository Checkouts & Security Pre-Commit Interception',
+    tool: 'Git & Gitleaks',
+    description: 'Clone project repository and execute automated pre-commit security checks to guarantee zero hardcoded passwords exist in commit history.',
+    commands: [
+      'git clone https://github.com/MarzanulHoque/docker-multi-tier-ecommerce.git',
+      'cd docker-multi-tier-ecommerce',
+      './.git/hooks/pre-commit # 0 secret leaks detected'
+    ],
+    highlights: [
+      'Gitleaks secret pattern scanning active on pre-commit hook',
+      'Clean microservices repository structure with decoupled frontend, backend & nginx directories'
     ]
   },
   {
-    id: 'docker',
-    label: 'docker ps',
-    command: 'docker ps --format "table {{.Names}}\\t{{.Status}}\\t{{.Ports}}"',
-    output: [
-      'NAMES                     STATUS                  PORTS',
-      'altios-backend-api        Up 4 days (healthy)     0.0.0.0:5000->8080/tcp',
-      'piramids-mysql-db         Up 4 days (healthy)     0.0.0.0:3306->3306/tcp',
-      'shiftledger-redis-cache   Up 12 days (healthy)    0.0.0.0:6379->6379/tcp',
-      'nginx-reverse-proxy       Up 12 days (healthy)    0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp'
+    stepNumber: '02',
+    title: 'Multi-Stage Build & GHCR Publishing',
+    tool: 'Docker & GitHub Container Registry',
+    description: 'Build lightweight multi-stage container images for both frontend static assets and Node.js REST API backend, then push to GitHub Container Registry.',
+    commands: [
+      'docker compose build --parallel',
+      'docker tag ecommerce-frontend ghcr.io/marzanulhoque/docker-multi-tier-ecommerce/frontend:latest',
+      'docker push ghcr.io/marzanulhoque/docker-multi-tier-ecommerce/backend:latest'
+    ],
+    highlights: [
+      'Multi-stage Dockerfile builds reducing production runtime image footprint',
+      'Automated security scans performed before container registry push'
     ]
   },
   {
-    id: 'kubectl',
-    label: 'kubectl status',
-    command: 'kubectl get pods -n production -o wide',
-    output: [
-      'NAME                             READY   STATUS    RESTARTS   AGE    IP           NODE',
-      'dotnet-api-79b8f4d9c4-2xk8l      1/1     Running   0          6d     10.244.1.14  node-aws-az1',
-      'dotnet-api-79b8f4d9c4-m9p2w      1/1     Running   0          6d     10.244.2.08  node-aws-az2',
-      'frontend-angular-5c6d7e-x4z9q    1/1     Running   0          12d    10.244.1.22  node-aws-az1'
+    stepNumber: '03',
+    title: 'AWS SSM Secret Retrieval & IMDSv2 Tokening',
+    tool: 'AWS SSM Parameter Store & EC2 IMDSv2',
+    description: 'The EC2 deployment script uses IMDSv2 metadata tokens to detect region automatically and pulls /prod/ecommerce/db_password securely into runtime memory without saving secrets to disk.',
+    commands: [
+      'TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60")',
+      'POSTGRES_PASSWORD=$(aws ssm get-parameter --name "/prod/ecommerce/db_password" --with-decryption --query "Parameter.Value" --output text)'
+    ],
+    highlights: [
+      'Zero credentials saved on host filesystem',
+      'IMDSv2 session token security enforcement'
     ]
   },
   {
-    id: 'aws',
-    label: 'aws status',
-    command: 'aws ecs describe-clusters --clusters production-cluster',
-    output: [
-      '{',
-      '  "clusters": [',
-      '    {',
-      '      "clusterName": "production-cluster",',
-      '      "status": "ACTIVE",',
-      '      "registeredContainerInstancesCount": 4,',
-      '      "runningTasksCount": 8,',
-      '      "pendingTasksCount": 0',
-      '    }',
-      '  ]',
-      '}'
-    ]
-  },
-  {
-    id: 'azure',
-    label: 'azure boards',
-    command: 'az devops project show --project "Altios-Platform"',
-    output: [
-      '{',
-      '  "name": "Altios-Platform",',
-      '  "visibility": "private",',
-      '  "state": "wellFormed",',
-      '  "processTemplate": "Agile",',
-      '  "activeSprints": "Sprint 24 - Shipped"',
-      '}'
+    stepNumber: '04',
+    title: 'Dependent Service Orchestration & Health Probes',
+    tool: 'Docker Compose & Postgres pg_isready',
+    description: 'Launch container stack via Docker Compose. The PostgreSQL container initializes first and executes pg_isready healthcheck before backend API service unblocks.',
+    commands: [
+      'docker compose up -d',
+      'docker compose ps # Verify all 4 containers healthy'
+    ],
+    highlights: [
+      'Postgres healthcheck: pg_isready -U app_user -d app_db',
+      'Backend startup condition: depends_on postgres condition: service_healthy',
+      'Nginx proxy container mapping external port 80 to internal bridge app-network'
     ]
   }
 ]
 
 export default function DevOpsSection() {
-  const [activeTab, setActiveTab] = useState<'pipeline' | 'infra' | 'terminal'>('pipeline')
-  const [selectedStep, setSelectedStep] = useState<PipelineStep>(pipelineSteps[1])
-  const [activeTerminal, setActiveTerminal] = useState(terminalPresets[0])
+  const [selectedProject, setSelectedProject] = useState<DevOpsProject | null>(null)
+
+  useEffect(() => {
+    if (selectedProject) {
+      document.body.style.overflow = 'hidden'
+      document.body.classList.add('modal-open')
+    } else {
+      document.body.style.overflow = ''
+      document.body.classList.remove('modal-open')
+    }
+    return () => {
+      document.body.style.overflow = ''
+      document.body.classList.remove('modal-open')
+    }
+  }, [selectedProject])
 
   return (
-    <Section id="devops" eyebrow="cloud & devops" title="DevOps & Infrastructure Showcase">
-      {/* Mode Navigation Tabs */}
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-3 border-b border-line pb-4">
-        <p className="text-xs font-medium text-mut">Select Representation Mode:</p>
-        <div className="inline-flex rounded-xl border border-line bg-panel p-1">
-          <button
-            type="button"
-            onClick={() => setActiveTab('pipeline')}
-            className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
-              activeTab === 'pipeline'
-                ? 'bg-vio text-white shadow-sm'
-                : 'text-mut hover:text-fg'
-            }`}
-          >
-            <span>🔄</span> CI/CD Pipeline Visualizer
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('infra')}
-            className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
-              activeTab === 'infra'
-                ? 'bg-vio text-white shadow-sm'
-                : 'text-mut hover:text-fg'
-            }`}
-          >
-            <span>☁️</span> Cloud Architecture Map
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab('terminal')}
-            className={`flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-semibold transition-all ${
-              activeTab === 'terminal'
-                ? 'bg-vio text-white shadow-sm'
-                : 'text-mut hover:text-fg'
-            }`}
-          >
-            <span>💻</span> Terminal / CLI Console
-          </button>
-        </div>
+    <Section id="devops" eyebrow="cloud & devops" title="DevOps Architecture & Infrastructure Showcase">
+      <p className="mb-6 text-sm text-mut">
+        Detailed breakdown of containerized microservices, cloud deployments, and automated CI/CD workflows.
+      </p>
+
+      {/* DevOps Project Card matching Projects section style */}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <article
+          onMouseMove={cardGlow}
+          onClick={() => {
+            setSelectedProject(devOpsProject)
+          }}
+          className="glow-card reveal cursor-pointer rounded-2xl border border-line bg-panel p-6 transition-transform hover:-translate-y-1"
+        >
+          <h3 className="text-lg font-bold text-fg">{devOpsProject.title}</h3>
+          <p className="mt-1 font-mono text-xs text-vio">{devOpsProject.subtitle}</p>
+          <p className="mt-3 text-sm text-mut">{devOpsProject.overviewArticle[0]}</p>
+          <ul className="mt-4 flex flex-wrap gap-2">
+            {devOpsProject.tags.map((tech) => (
+              <li
+                key={tech}
+                className="rounded-full bg-panel-2 px-3 py-1 font-mono text-xs text-mut"
+              >
+                {tech}
+              </li>
+            ))}
+          </ul>
+        </article>
       </div>
 
-      {/* VIEW 1: CI/CD PIPELINE VISUALIZER */}
-      {activeTab === 'pipeline' && (
-        <div className="reveal space-y-6">
-          {/* Horizontal Interactive Pipeline Nodes */}
-          <div className="grid gap-3 sm:grid-cols-5">
-            {pipelineSteps.map((step, idx) => {
-              const isSelected = selectedStep.id === step.id
-              return (
-                <button
-                  key={step.id}
-                  type="button"
-                  onClick={() => setSelectedStep(step)}
-                  className={`glow-card relative flex flex-col justify-between rounded-xl border p-4 text-left transition-all ${
-                    isSelected
-                      ? 'border-vio bg-panel-2 ring-1 ring-vio'
-                      : 'border-line bg-panel hover:border-mut'
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-[10px] font-bold text-faint">STEP 0{idx + 1}</span>
-                    <span className="flex h-2 w-2 rounded-full bg-emerald-500 ring-4 ring-emerald-500/20" />
-                  </div>
-                  <div className="my-3">
-                    <h4 className="text-xs font-bold leading-tight text-fg">{step.name}</h4>
-                    <p className="mt-1 font-mono text-[10px] text-mut">{step.tool}</p>
-                  </div>
-                  <div className="flex items-center justify-between border-t border-line/60 pt-2 text-[10px] text-faint">
-                    <span>{step.duration}</span>
-                    <span className="font-semibold text-emerald-400">PASSED</span>
-                  </div>
-                </button>
-              )
-            })}
-          </div>
-
-          {/* Selected Stage Detail Panel */}
+      {/* ARTICLE DEPLOYMENT DESCRIPTION MODAL */}
+      {selectedProject && (
+        <div
+          id="devops-modal"
+          className="fixed top-16 inset-x-0 bottom-0 z-50 flex items-start justify-center overflow-y-auto bg-ink/95 p-4 sm:p-6 backdrop-blur-md transition-opacity"
+          onClick={() => setSelectedProject(null)}
+        >
           <div
-            onMouseMove={cardGlow}
-            className="glow-card rounded-2xl border border-line bg-panel p-6"
+            className="glow-card relative my-auto flex flex-col max-h-[calc(100vh-6rem)] w-full max-w-4xl overflow-y-auto rounded-2xl border border-line bg-panel p-6 shadow-2xl sm:p-8"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex flex-wrap items-center justify-between gap-4 border-b border-line pb-4">
+            {/* Dedicated Top Right Close Button */}
+            <button
+              type="button"
+              onClick={() => setSelectedProject(null)}
+              className="absolute top-4 right-4 z-10 flex h-8 w-8 items-center justify-center rounded-full border border-line bg-panel-2 text-sm font-bold text-mut transition-colors hover:bg-line hover:text-fg"
+              aria-label="Close modal"
+            >
+              ✕
+            </button>
+
+            {/* Clean Header */}
+            <div className="border-b border-line pb-5 pr-10 flex flex-wrap items-start justify-between gap-4">
               <div>
-                <span className="font-mono text-xs uppercase tracking-wider text-vio font-semibold">
-                  Stage Details & Execution Logs
+                <span className="inline-block rounded-full border border-line bg-panel-2 px-3 py-1 font-mono text-[10px] font-semibold text-vio mb-2">
+                  {selectedProject.badge}
                 </span>
-                <h3 className="mt-1 text-lg font-bold text-fg">{selectedStep.name}</h3>
-                <p className="text-xs text-mut">{selectedStep.details}</p>
+                <h2 className="text-2xl font-bold text-fg sm:text-3xl leading-snug">{selectedProject.title}</h2>
+                <p className="font-mono text-xs text-mut mt-1">{selectedProject.subtitle}</p>
               </div>
-              <div className="flex items-center gap-2 rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-400">
-                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                Pipeline Stage Verified
+
+              <div className="flex items-center gap-3">
+                <a
+                  href={selectedProject.githubUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 rounded-xl bg-vio px-4 py-2 text-xs font-semibold text-white shadow transition-transform hover:scale-105"
+                >
+                  <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                  </svg>
+                  GitHub Repository
+                </a>
               </div>
             </div>
 
-            {/* Terminal Window with stage logs */}
-            <div className="mt-4 overflow-hidden rounded-xl border border-line bg-[#09090e] p-4 font-mono text-xs text-emerald-400 shadow-inner">
-              <div className="mb-3 flex items-center justify-between border-b border-white/10 pb-2 text-[11px] text-mut">
-                <span>Console Output — {selectedStep.tool}</span>
-                <span>Execution Time: {selectedStep.duration}</span>
+            {/* Written Technical Overview */}
+            <div className="mt-6 space-y-3">
+              <h3 className="font-mono text-xs uppercase tracking-wider text-vio font-semibold">
+                Technical Overview & Architecture Goal
+              </h3>
+              {selectedProject.overviewArticle.map((para, idx) => (
+                <p key={idx} className="text-xs sm:text-sm leading-relaxed text-mut">
+                  {para}
+                </p>
+              ))}
+
+              <div className="rounded-xl border border-line bg-panel-2 p-4">
+                <h4 className="font-mono text-xs uppercase tracking-wider text-vio font-semibold mb-2">
+                  Deployment Prerequisites
+                </h4>
+                <ul className="grid gap-1.5 text-xs text-mut sm:grid-cols-2">
+                  {selectedProject.prerequisites.map((req, idx) => (
+                    <li key={idx} className="flex items-center gap-2">
+                      <span className="text-emerald-400 font-bold">✓</span> {req}
+                    </li>
+                  ))}
+                </ul>
               </div>
-              <div className="space-y-1.5">
-                {selectedStep.logs.map((log, idx) => (
-                  <p key={idx} className={log.startsWith('$') ? 'text-violet-300 font-bold' : 'text-emerald-400/90'}>
-                    {log}
-                  </p>
+            </div>
+
+            {/* STEP-BY-STEP WRITTEN DEPLOYMENT PROCEDURE */}
+            <div className="mt-8">
+              <h3 className="font-mono text-xs uppercase tracking-wider text-vio font-semibold mb-4">
+                Step-by-Step Production Deployment Procedure
+              </h3>
+
+              <div className="space-y-4">
+                {deploymentStages.map((stage) => (
+                  <div key={stage.stepNumber} className="rounded-2xl border border-line bg-panel-2 p-5">
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
+                      <div>
+                        <span className="font-mono text-xs text-vio font-bold">STAGE {stage.stepNumber}</span>
+                        <h4 className="text-base font-bold text-fg">{stage.title}</h4>
+                        <p className="font-mono text-xs text-vio font-semibold">{stage.tool}</p>
+                      </div>
+                    </div>
+
+                    <p className="mt-3 text-xs text-fg leading-relaxed font-medium">
+                      {stage.description}
+                    </p>
+
+                    {/* Shell Execution Commands */}
+                    <div className="mt-3 overflow-hidden rounded-xl border border-line bg-ink/90 p-3 font-mono text-xs text-emerald-400">
+                      <div className="text-[10px] text-faint border-b border-line pb-1 mb-2">Shell Commands:</div>
+                      {stage.commands.map((cmd, i) => (
+                        <p key={i} className="whitespace-pre-wrap text-emerald-400 font-semibold">{cmd}</p>
+                      ))}
+                    </div>
+
+                    {/* Key Highlights */}
+                    <div className="mt-3 pt-2">
+                      <ul className="grid gap-1 text-xs text-mut sm:grid-cols-2">
+                        {stage.highlights.map((hl, i) => (
+                          <li key={i} className="flex items-center gap-2">
+                            <span className="text-emerald-400 font-bold">✓</span> {hl}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
                 ))}
               </div>
             </div>
-          </div>
-        </div>
-      )}
 
-      {/* VIEW 2: CLOUD INFRASTRUCTURE MAP */}
-      {activeTab === 'infra' && (
-        <div className="reveal space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {infraNodes.map((node) => (
-              <div
-                key={node.id}
-                onMouseMove={cardGlow}
-                className="glow-card flex flex-col justify-between rounded-2xl border border-line bg-panel p-5 transition-transform hover:-translate-y-1"
+            {/* Modal Footer Close */}
+            <div className="mt-8 flex justify-end border-t border-line pt-4">
+              <button
+                type="button"
+                onClick={() => setSelectedProject(null)}
+                className="rounded-xl border border-line bg-panel-2 px-5 py-2 text-xs font-semibold text-fg hover:bg-line"
               >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-2xl">{node.icon}</span>
-                    <span className="rounded-full bg-panel-2 px-2.5 py-0.5 font-mono text-[10px] font-semibold text-vio border border-line">
-                      {node.provider}
-                    </span>
-                  </div>
-                  <h3 className="mt-3 text-base font-bold text-fg">{node.name}</h3>
-                  <p className="mt-1 text-xs leading-relaxed text-mut">{node.description}</p>
-                </div>
-
-                <div className="mt-5 border-t border-line/60 pt-3">
-                  <div className="mb-2 flex items-center justify-between text-[11px]">
-                    <span className="text-mut">Key Highlight:</span>
-                    <span className="font-mono font-semibold text-emerald-400">{node.metrics}</span>
-                  </div>
-                  <div className="flex flex-wrap gap-1.5">
-                    {node.tags.map((tag) => (
-                      <span key={tag} className="rounded-md bg-panel-2 px-2 py-0.5 font-mono text-[10px] text-faint">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* VIEW 3: TERMINAL / CLI CONSOLE */}
-      {activeTab === 'terminal' && (
-        <div className="reveal">
-          <div
-            onMouseMove={cardGlow}
-            className="glow-card overflow-hidden rounded-2xl border border-line bg-[#0c0c14] shadow-2xl"
-          >
-            {/* Terminal Header */}
-            <div className="flex flex-wrap items-center justify-between border-b border-line/60 bg-[#13131e] px-4 py-3">
-              <div className="flex items-center gap-2">
-                <span className="h-3 w-3 rounded-full bg-rose-500/80" />
-                <span className="h-3 w-3 rounded-full bg-amber-500/80" />
-                <span className="h-3 w-3 rounded-full bg-emerald-500/80" />
-                <span className="ml-2 font-mono text-xs text-mut">marzanul@devops-node:~</span>
-              </div>
-              {/* Preset Buttons */}
-              <div className="flex flex-wrap gap-1.5">
-                {terminalPresets.map((preset) => (
-                  <button
-                    key={preset.id}
-                    type="button"
-                    onClick={() => setActiveTerminal(preset)}
-                    className={`rounded-md px-2.5 py-1 font-mono text-xs transition-colors ${
-                      activeTerminal.id === preset.id
-                        ? 'bg-vio text-white font-bold'
-                        : 'bg-panel-2 text-mut hover:text-fg'
-                    }`}
-                  >
-                    {preset.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Terminal Screen Body */}
-            <div className="p-5 font-mono text-xs">
-              <div className="flex items-center gap-2 text-violet-300">
-                <span className="text-emerald-400 font-bold">marzanul@devops-node:~$</span>
-                <span className="font-semibold text-white">{activeTerminal.command}</span>
-              </div>
-              <div className="mt-3 space-y-1 text-slate-300/90 leading-relaxed">
-                {activeTerminal.output.map((line, i) => (
-                  <p key={i} className="whitespace-pre-wrap">{line}</p>
-                ))}
-              </div>
-              <div className="mt-4 flex items-center gap-2 text-mut">
-                <span className="text-emerald-400 font-bold">marzanul@devops-node:~$</span>
-                <span className="caret" />
-              </div>
+                Close Article Guide
+              </button>
             </div>
           </div>
         </div>

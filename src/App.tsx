@@ -7,9 +7,9 @@ import Footer from './components/Footer'
 import Hero from './components/Hero'
 import About from './components/About'
 import Skills from './components/Skills'
-import DevOpsSection from './components/DevOpsSection'
 import Experience from './components/Experience'
 import Projects from './components/Projects'
+import DevOpsSection from './components/DevOpsSection'
 import Education from './components/Education'
 import Contact from './components/Contact'
 
@@ -34,9 +34,9 @@ export default function App() {
         <Hero />
         <About />
         <Skills />
-        <DevOpsSection />
         <Experience />
         <Projects />
+        <DevOpsSection />
         <Education />
         <Contact />
       </main>
