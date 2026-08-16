@@ -35,61 +35,121 @@ const devOpsProject: DevOpsProject = {
 const deploymentStages = [
   {
     stepNumber: '01',
-    title: 'Repository Checkouts & Security Pre-Commit Interception',
-    tool: 'Git & Gitleaks',
-    description: 'Clone project repository and execute automated pre-commit security checks to guarantee zero hardcoded passwords exist in commit history.',
+    title: 'Repository Architecture & Pre-Commit Security Audit',
+    tool: 'Git & Gitleaks Pre-Commit Hook',
+    description: 'Clone the decoupled 4-service repository. Execute local pre-commit security interception hooks scanning staged diffs for regex secret leaks before committing.',
     commands: [
       'git clone https://github.com/MarzanulHoque/docker-multi-tier-ecommerce.git',
       'cd docker-multi-tier-ecommerce',
-      './.git/hooks/pre-commit # 0 secret leaks detected'
+      './.git/hooks/pre-commit # Verified 0 hardcoded credentials in commit history'
     ],
     highlights: [
-      'Gitleaks secret pattern scanning active on pre-commit hook',
-      'Clean microservices repository structure with decoupled frontend, backend & nginx directories'
+      'Gitleaks secret interception active on git commit',
+      'Decoupled microservice folder layout (/frontend, /backend, /nginx, docker-compose.yml, deploy-ec2.sh)'
     ]
   },
   {
     stepNumber: '02',
-    title: 'Multi-Stage Build & GHCR Publishing',
-    tool: 'Docker & GitHub Container Registry',
-    description: 'Build lightweight multi-stage container images for both frontend static assets and Node.js REST API backend, then push to GitHub Container Registry.',
+    title: 'GitHub Repository Secrets & Workflow Integration',
+    tool: 'GitHub Actions Secrets & appleboy/ssh-action (.github/workflows/deploy.yml)',
+    description: 'Encrypted repository secrets are defined under GitHub Settings ➔ Secrets ➔ Actions, then injected dynamically into `.github/workflows/deploy.yml` via `appleboy/ssh-action` to establish passwordless SSH sessions.',
     commands: [
-      'docker compose build --parallel',
-      'docker tag ecommerce-frontend ghcr.io/marzanulhoque/docker-multi-tier-ecommerce/frontend:latest',
-      'docker push ghcr.io/marzanulhoque/docker-multi-tier-ecommerce/backend:latest'
+      '# 1. Configured Repository Secrets (GitHub Settings -> Secrets -> Actions):',
+      'EC2_HOST = <Elastic_IP> | EC2_USERNAME = ubuntu | EC2_SSH_KEY = <Private_PEM_Key>',
+      '',
+      '# 2. Consumption in .github/workflows/deploy.yml:',
+      '- name: Deploy & Build on EC2 via SSH',
+      '  uses: appleboy/ssh-action@v1.0.3',
+      '  with:',
+      '    host: ${{ secrets.EC2_HOST }}',
+      '    username: ${{ secrets.EC2_USERNAME }}',
+      '    key: ${{ secrets.EC2_SSH_KEY }}',
+      '    script: |',
+      '      cd docker-multi-tier-ecommerce && git checkout -- . && git pull origin main',
+      '      ./deploy-ec2.sh'
     ],
     highlights: [
-      'Multi-stage Dockerfile builds reducing production runtime image footprint',
-      'Automated security scans performed before container registry push'
+      'Zero plaintext SSH credentials committed in YAML workflow files',
+      'Encrypted secrets injection (${{ secrets.EC2_HOST }}, ${{ secrets.EC2_SSH_KEY }}) masking private keys in CI logs',
+      'Automated SSH remote command execution invoking deploy-ec2.sh upon git push main'
     ]
   },
   {
     stepNumber: '03',
-    title: 'AWS SSM Secret Retrieval & IMDSv2 Tokening',
-    tool: 'AWS SSM Parameter Store & EC2 IMDSv2',
-    description: 'The EC2 deployment script uses IMDSv2 metadata tokens to detect region automatically and pulls /prod/ecommerce/db_password securely into runtime memory without saving secrets to disk.',
+    title: 'Multi-Stage Docker Building & GHCR Image Registry Publishing',
+    tool: 'Docker Engine, Multi-Stage Dockerfile & GHCR',
+    description: 'Build optimized lightweight multi-stage Docker container images for Node.js REST API and static Frontend SPA, then tag and push OCI artifacts to GitHub Container Registry.',
     commands: [
-      'TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60")',
-      'POSTGRES_PASSWORD=$(aws ssm get-parameter --name "/prod/ecommerce/db_password" --with-decryption --query "Parameter.Value" --output text)'
+      '# Build multi-stage Node.js backend & Frontend SPA in parallel',
+      'docker compose build --parallel',
+      'docker tag ecommerce-backend ghcr.io/marzanulhoque/docker-multi-tier-ecommerce/backend:latest',
+      'docker push ghcr.io/marzanulhoque/docker-multi-tier-ecommerce/backend:latest'
     ],
     highlights: [
-      'Zero credentials saved on host filesystem',
-      'IMDSv2 session token security enforcement'
+      'Multi-stage Dockerfile builds reducing production runtime image footprint',
+      'Automated container vulnerability scanning prior to GHCR registry publishing'
     ]
   },
   {
     stepNumber: '04',
-    title: 'Dependent Service Orchestration & Health Probes',
-    tool: 'Docker Compose & Postgres pg_isready',
-    description: 'Launch container stack via Docker Compose. The PostgreSQL container initializes first and executes pg_isready healthcheck before backend API service unblocks.',
+    title: 'Idempotent Host Setup & Docker Engine Provisioning',
+    tool: 'deploy-ec2.sh & AWS EC2 Ubuntu 24.04',
+    description: 'Execute `deploy-ec2.sh` on AWS EC2. The script checks for existing Docker Engine binaries; if missing, it automatically installs ca-certificates, curl, gnupg, Docker CE, and enables docker systemd service.',
     commands: [
-      'docker compose up -d',
-      'docker compose ps # Verify all 4 containers healthy'
+      'chmod +x deploy-ec2.sh',
+      '# Idempotent execution — skips apt packages if Docker binary is already active',
+      './deploy-ec2.sh'
     ],
     highlights: [
-      'Postgres healthcheck: pg_isready -U app_user -d app_db',
-      'Backend startup condition: depends_on postgres condition: service_healthy',
-      'Nginx proxy container mapping external port 80 to internal bridge app-network'
+      'Idempotent installation logic (skips package manager if docker binary exists)',
+      'Automated systemctl service configuration and non-root docker group assignment'
+    ]
+  },
+  {
+    stepNumber: '05',
+    title: 'AWS IMDSv2 Tokening & SSM Parameter Store Secret Ingestion',
+    tool: 'AWS EC2 IMDSv2 & AWS SSM Parameter Store',
+    description: 'The deployment script requests an IMDSv2 session token from `http://169.254.169.254/latest/api/token` to detect AWS region automatically. It then fetches `/prod/ecommerce/db_password` securely into runtime memory via AWS CLI without saving passwords to disk.',
+    commands: [
+      'TOKEN=$(curl -s -X PUT "http://169.254.169.254/latest/api/token" -H "X-aws-ec2-metadata-token-ttl-seconds: 60")',
+      'AWS_REGION=$(curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/placement/region)',
+      'POSTGRES_PASSWORD=$(aws ssm get-parameter --name "/prod/ecommerce/db_password" --with-decryption --region "$AWS_REGION" --query "Parameter.Value" --output text)',
+      'export POSTGRES_PASSWORD'
+    ],
+    highlights: [
+      'Zero hardcoded credentials on host disk or inside Git repo',
+      'IMDSv2 token security enforcement preventing SSRF metadata leaks',
+      'Non-interactive CI fallback generation (openssl rand -hex 16)'
+    ]
+  },
+  {
+    stepNumber: '06',
+    title: 'Healthcheck Dependent Stack Orchestration',
+    tool: 'Docker Compose, Postgres pg_isready & Bridge Network',
+    description: 'Deploy the 4 containerized services onto an isolated bridge network (`app-network`). PostgreSQL initializes first with `pg_isready` healthcheck; backend Node API delays startup via `depends_on postgres condition: service_healthy`.',
+    commands: [
+      'sudo -E docker compose up --build -d',
+      '# Verify container health status:',
+      'docker compose ps'
+    ],
+    highlights: [
+      'PostgreSQL healthcheck probe: pg_isready -U app_user -d app_db (10s interval, 5 retries)',
+      'Backend service_healthy condition preventing HTTP 500 startup errors',
+      'Named volume pg_data enforcing database persistence across container restarts'
+    ]
+  },
+  {
+    stepNumber: '07',
+    title: 'Nginx Reverse Proxy Ingress & End-to-End Health Probe Audit',
+    tool: 'Nginx Alpine & HTTP Health Monitoring',
+    description: 'Nginx Reverse Proxy container maps host port 80 to internal bridge network `app-network`, proxying static SPA frontend assets on `/` and routing API endpoints to `/api/*`.',
+    commands: [
+      'curl -I http://localhost/                # Returns HTTP 200 OK (Nginx Proxy ➔ Frontend)',
+      'curl http://localhost/api/health         # Returns HTTP 200 OK (Nginx Proxy ➔ Express API ➔ Postgres DB)'
+    ],
+    highlights: [
+      'Unified ingress entry point on HTTP Port 80',
+      'Internal bridge network isolating PostgreSQL DB port 5432 from public internet'
     ]
   }
 ]
