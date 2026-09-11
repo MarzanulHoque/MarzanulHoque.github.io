@@ -16,14 +16,14 @@ export const identity = {
 export const links = {
   github: 'https://github.com/marzanulhoque',
   linkedin: 'https://www.linkedin.com/in/marzanulhoque/',
- // upwork: '', // optional — leave '' to hide it in Contact
+  // upwork: '', // optional — leave '' to hide it in Contact
   email: 'marzanulhoque.cseru@gmail.com',
 }
 
 // Hero stats (value + label). Keep to ~3.
 export const stats = [
   { value: '2+', label: 'years of experience' },
-  { value: '7', label: 'projects built' },
+  { value: '8', label: 'projects built' },
   { value: '10+', label: 'technologies used' },
 ]
 
@@ -36,10 +36,10 @@ export const about = [
 export const skillGroups = [
   { title: 'Languages', skills: ['C#', 'JavaScript', 'Python', 'C', 'C++'] },
   { title: 'Frontend', skills: ['React', 'Angular'] },
-  { title: 'Backend', skills: ['ASP.NET Core', '.NET MVC', 'Entity Framework Core', 'Dapper', 'REST APIs'] },
+  { title: 'Backend', skills: ['ASP.NET Core', '.NET MVC', 'Entity Framework Core', 'Dapper', 'REST APIs', 'xUnit'] },
   { title: 'Databases', skills: ['MySQL', 'SQLite', 'Microsoft SQL Server'] },
-  { title: 'Cloud & DevOps', skills: ['AWS', 'Docker','Kubernetes', 'Networking','Linux', 'CI/CD','Azure DevOps','Azure Boards','Azure Repos'] },
-  { title: 'Tools & Practices', skills: ['Git', 'GitHub', 'Visual Studio', 'Visual Studio Code', 'Postman','Jira'] },
+  { title: 'Cloud & DevOps', skills: ['AWS', 'Docker', 'Kubernetes', 'Linux', 'Nginx', 'CI/CD', 'GitHub Actions', 'Azure DevOps', 'Azure Boards', 'Azure Repos', 'Networking'] },
+  { title: 'Tools & Practices', skills: ['Git', 'GitHub', 'Visual Studio', 'Visual Studio Code', 'Postman', 'Jira'] },
   { title: 'AI Tools & Assistants', skills: ['GitHub Copilot', 'Claude CLI', 'AI-Driven Development'] },
 ]
 
@@ -60,6 +60,15 @@ export const experience = [
 ]
 
 export const projects = [
+  {
+    name: '.NET DevOps Release Tracker & CI/CD Pipeline',
+    context: 'Production ASP.NET Core 8 & AWS EC2 Infrastructure · DevOps & CI/CD · Shipped',
+    description: 'Automated CI/CD pipeline and release management platform for ASP.NET Core 8.0 MVC on AWS Linux EC2. Features automated xUnit fail-safe testing gates in GitHub Actions, zero-container native Kestrel execution managed by Linux systemd (`dotnetapp.service`), high-throughput Nginx reverse proxy, MySQL 8.0 with Pomelo EF Core, dynamic server secret isolation (`/etc/dotnetapp.env` with chmod 600), and a live observability health endpoint (`/health`).',
+    stack: ['ASP.NET Core 8', 'C#', 'GitHub Actions', 'AWS EC2', 'Linux systemd', 'Nginx', 'MySQL', 'EF Core', 'xUnit', 'Bash'],
+    links: [
+      { label: 'GitHub', url: 'https://github.com/MarzanulHoque/dotnet-devops-release-tracker' },
+    ],
+  },
   {
     name: 'Multi-Tier Containerized E-Commerce Platform',
     context: 'Production-grade microservices deployment on AWS EC2 · DevOps & Cloud Architecture · Shipped',
@@ -90,7 +99,7 @@ export const projects = [
     stack: ['Next.js 16', 'React 19', 'TypeScript', 'Prisma', 'PostgreSQL', 'NextAuth', 'Zod', 'Tailwind CSS', 'Playwright'],
     links: [{ label: 'Live Site', url: 'https://tallynest.vercel.app/' }],
   },
-  
+
   {
     name: 'DotNetScaffold',
     context: 'ASP.NET Core scaffolding & CRUD generator CLI · Personal project',
