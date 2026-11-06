@@ -21,7 +21,6 @@ export default function App() {
       <div className="ambient-top" aria-hidden="true" />
       <GlobalFX />
       <Nav />
-      <ScrollIdentity />
       <main className="relative z-10">
         <Hero />
         <About />
@@ -33,6 +32,7 @@ export default function App() {
         <Contact />
       </main>
       <Footer />
+      <ScrollIdentity />
       <BackToTop />
     </>
   )
