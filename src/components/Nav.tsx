@@ -52,7 +52,13 @@ export default function Nav() {
       />
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
         <div className="flex items-center gap-3">
-          <a href="#top" className="font-mono text-sm font-bold text-slate-900 hover:text-emerald-600 transition-colors dark:text-fg dark:hover:text-emerald-400">
+          <a
+            href="#top"
+            className="flex items-center gap-2.5 font-mono text-sm font-bold text-slate-900 hover:text-emerald-600 transition-colors group dark:text-fg dark:hover:text-emerald-400"
+          >
+            <span className="flex h-7 w-7 items-center justify-center rounded-lg border border-emerald-200 bg-emerald-50 font-mono text-[11px] font-black text-emerald-800 shadow-xs transition-transform group-hover:scale-105 dark:border-emerald-500/30 dark:bg-emerald-950/40 dark:text-emerald-400">
+              MH
+            </span>
             <span>{identity.name}</span>
           </a>
           {/* Systems Telemetry Pill */}
