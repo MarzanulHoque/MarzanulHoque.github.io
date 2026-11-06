@@ -136,7 +136,7 @@ const scenes: Record<FXVariant, (props: SceneProps) => React.JSX.Element> = {
 export default function SectionFX({ variant }: { variant: FXVariant }) {
   const dark = useIsDark()
   const colors = useMemo(
-    () => (dark ? ['#818cf8', '#c084fc', '#f472b6'] : ['#6366f1', '#9333ea', '#db2777']),
+    () => (dark ? ['#0ea5e9', '#10b981', '#38bdf8'] : ['#94a3b8', '#0284c7', '#059669']),
     [dark],
   )
   const Scene = scenes[variant]

@@ -2,25 +2,25 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* semantic tokens — light theme */
+/* semantic tokens — light theme (Crisp Clean Systems) */
 :root {
   --c-ink: #f8fafc;
   --c-panel: #ffffff;
   --c-panel-2: #f1f5f9;
   --c-line: #e2e8f0;
   --c-fg: #0f172a;
-  --c-mut: #475569;
-  --c-faint: #94a3b8;
-  --c-accent: #059669;
+  --c-mut: #334155;
+  --c-faint: #64748b;
+  --c-accent: #047857;
   --c-cyan: #0284c7;
 
   --g1: #059669;
   --g2: #0284c7;
   --g3: #4f46e5;
 
-  --glow-alpha: 5%;
-  --grid-dot: rgba(2, 132, 199, 0.12);
-  --blob-alpha: 0.12;
+  --glow-alpha: 3%;
+  --grid-dot: rgba(148, 163, 184, 0.25);
+  --blob-alpha: 0.05;
 }
 
 /* dark theme: Obsidian & Systems Telemetry */

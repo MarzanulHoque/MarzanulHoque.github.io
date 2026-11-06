@@ -333,26 +333,26 @@ export default function DevOpsSection() {
             key={project.id}
             onMouseMove={cardGlow}
             onClick={() => setSelectedProject(project)}
-            className="glow-card reveal group cursor-pointer rounded-2xl border border-line bg-panel p-6 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/50 flex flex-col justify-between"
+            className="glow-card reveal group cursor-pointer rounded-2xl border border-slate-200 bg-white p-6 shadow-xs transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/50 hover:shadow-md dark:border-line dark:bg-panel dark:shadow-none flex flex-col justify-between"
           >
             <div>
               <div className="flex items-center justify-between gap-2 mb-3">
-                <span className="rounded-full border border-line bg-panel-2 px-2.5 py-0.5 font-mono text-[10px] font-semibold text-cyan-400">
+                <span className="rounded-full border border-sky-200 bg-sky-50 px-2.5 py-0.5 font-mono text-[10px] font-semibold text-sky-700 dark:border-line dark:bg-panel-2 dark:text-cyan-400">
                   {project.badge}
                 </span>
                 {project.liveUrl && (
-                  <span className="flex items-center gap-1.5 font-mono text-[10px] font-semibold text-emerald-400">
-                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <span className="flex items-center gap-1.5 font-mono text-[10px] font-semibold text-emerald-600 dark:text-emerald-400">
+                    <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
                     Live Deployment
                   </span>
                 )}
               </div>
 
-              <h3 className="text-lg font-bold text-fg group-hover:text-emerald-400 transition-colors">
+              <h3 className="text-lg font-bold text-slate-900 group-hover:text-emerald-700 transition-colors dark:text-fg dark:group-hover:text-emerald-400">
                 {project.title}
               </h3>
-              <p className="mt-1 font-mono text-xs text-cyan-400">{project.subtitle}</p>
-              <p className="mt-3 text-sm text-mut line-clamp-3 leading-relaxed">
+              <p className="mt-1 font-mono text-xs text-sky-700 dark:text-cyan-400">{project.subtitle}</p>
+              <p className="mt-3 text-sm text-slate-600 dark:text-mut line-clamp-3 leading-relaxed">
                 {project.overviewArticle[0]}
               </p>
 
@@ -360,7 +360,7 @@ export default function DevOpsSection() {
                 {project.tags.map((tech) => (
                   <li
                     key={tech}
-                    className="rounded-full bg-panel-2 px-2.5 py-0.5 font-mono text-xs text-mut"
+                    className="rounded-full border border-slate-200 bg-slate-100 px-2.5 py-0.5 font-mono text-xs text-slate-700 dark:border-transparent dark:bg-panel-2 dark:text-mut"
                   >
                     {tech}
                   </li>
@@ -368,8 +368,8 @@ export default function DevOpsSection() {
               </ul>
             </div>
 
-            <div className="mt-6 flex items-center justify-between border-t border-line/60 pt-4">
-              <span className="font-mono text-xs font-semibold text-emerald-400 group-hover:underline flex items-center gap-1">
+            <div className="mt-6 flex items-center justify-between border-t border-slate-100 dark:border-line/60 pt-4">
+              <span className="font-mono text-xs font-semibold text-emerald-600 dark:text-emerald-400 group-hover:underline flex items-center gap-1">
                 Explore Architecture & Deployment →
               </span>
               <div className="flex items-center gap-3">
