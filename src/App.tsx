@@ -18,15 +18,7 @@ export default function App() {
 
   return (
     <>
-      <div
-        id="glow-layer"
-        aria-hidden="true"
-        className="pointer-events-none fixed inset-0 z-0"
-        style={{
-          background:
-            'radial-gradient(600px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--g2) var(--glow-alpha), transparent), transparent 70%)',
-        }}
-      />
+      <div className="ambient-top" aria-hidden="true" />
       <GlobalFX />
       <Nav />
       <ScrollIdentity />

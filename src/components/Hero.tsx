@@ -1,116 +1,112 @@
-import { useState, type ReactNode } from 'react'
+import { useState } from 'react'
 import { useReveal } from '../hooks/useReveal'
-import { identity, skillGroups, stats } from '../data/profile'
-
-/* tiny syntax-highlight helpers for the fake IDE card */
-const K = ({ children }: { children: ReactNode }) => <span className="text-[#c678dd]">{children}</span>
-const T = ({ children }: { children: ReactNode }) => <span className="text-[#e5c07b]">{children}</span>
-const S = ({ children }: { children: ReactNode }) => <span className="text-[#98c379]">{children}</span>
-const P = ({ children }: { children: ReactNode }) => <span className="text-[#abb2bf]">{children}</span>
+import { identity, stats } from '../data/profile'
+import InteractivePipeline from './InteractivePipeline'
 
 export default function Hero() {
   const ref = useReveal<HTMLElement>()
-  const topSkills = skillGroups.flatMap((g) => g.skills).slice(0, 3)
   const [avatarError, setAvatarError] = useState(false)
 
   return (
-    <section id="top" ref={ref} className="relative overflow-hidden">
-      <div className="blob left-[-10%] top-[-10%] h-96 w-96 bg-grad" aria-hidden="true" />
-      <div className="blob bottom-[-20%] right-[-5%] h-80 w-80 bg-grad" aria-hidden="true" />
-      <div className="dot-grid absolute inset-0" aria-hidden="true" />
+    <section id="top" ref={ref} className="relative overflow-hidden pt-28 pb-16 sm:pt-36 sm:pb-24">
+      {/* Subtle background grid pattern */}
+      <div className="dot-grid absolute inset-0 opacity-40" aria-hidden="true" />
 
-      <div className="relative z-10 mx-auto grid max-w-5xl gap-12 px-6 pb-20 pt-32 sm:pt-40 lg:grid-cols-2 lg:items-center">
-        {/* left: identity */}
-        <div className="reveal">
-          {/* Avatar frame */}
-          <div className="mb-6 inline-block">
-            <div className="group relative h-24 w-24 sm:h-28 sm:w-28 cursor-pointer">
-              {/* Outer glowing halo */}
-              <div className="absolute -inset-1.5 rounded-full bg-grad opacity-70 blur-md transition-all duration-500 group-hover:opacity-100 group-hover:blur-lg" />
-              {/* Animated gradient ring */}
-              <div className="absolute -inset-[2px] rounded-full bg-grad transition-transform duration-500 group-hover:scale-105" />
-              {/* Inner container */}
-              <div className="relative h-full w-full overflow-hidden rounded-full border-2 border-ink bg-panel p-[2px]">
-                {!avatarError && identity.avatar ? (
-                  <img
-                    src={identity.avatar}
-                    alt={identity.name}
-                    onError={() => setAvatarError(true)}
-                    className="h-full w-full rounded-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                ) : (
-                  <div className="flex h-full w-full items-center justify-center rounded-full bg-panel-2 font-mono text-xl font-bold text-grad">
-                    {identity.name.split(' ').map((n) => n[0]).join('').slice(0, 3)}
-                  </div>
-                )}
-              </div>
+      <div className="relative z-10 mx-auto grid max-w-6xl gap-12 px-6 lg:grid-cols-12 lg:items-center">
+        {/* Left Column: Identity & Recruiter Value Pitch */}
+        <div className="reveal lg:col-span-6">
+          {/* Recruiter Live Status Badge */}
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/20 px-3.5 py-1.5 backdrop-blur-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+            </span>
+            <span className="font-mono text-xs font-semibold text-emerald-400">
+              Available for Junior Software & DevOps Roles
+            </span>
+          </div>
+
+          {/* Profile Identity Header */}
+          <div className="flex items-center gap-4 mb-4">
+            <div className="relative h-16 w-16 sm:h-20 sm:w-20 shrink-0 overflow-hidden rounded-full border-2 border-line bg-panel p-0.5 shadow-md">
+              {!avatarError && identity.avatar ? (
+                <img
+                  src={identity.avatar}
+                  alt={identity.name}
+                  onError={() => setAvatarError(true)}
+                  className="h-full w-full rounded-full object-cover"
+                />
+              ) : (
+                <div className="flex h-full w-full items-center justify-center rounded-full bg-panel-2 font-mono text-lg font-bold text-emerald-400">
+                  {identity.name.split(' ').map((n) => n[0]).join('').slice(0, 3)}
+                </div>
+              )}
+            </div>
+            <div>
+              <h1 className="text-2xl font-black tracking-tight sm:text-3xl lg:text-4xl text-fg">
+                {identity.name}
+              </h1>
+              <p className="font-mono text-sm sm:text-base font-semibold text-cyan-400 mt-0.5">
+                Software Engineer · .NET Core & Cloud DevOps
+              </p>
             </div>
           </div>
 
-          <h1 className="whitespace-nowrap text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
-            <span className="text-grad">{identity.name}</span>
-          </h1>
-          <p className="mt-3 font-mono text-lg text-vio">{identity.role}</p>
-          <p className="mt-4 max-w-md text-mut">{identity.pitch}</p>
+          <p className="mt-4 text-sm sm:text-base text-mut leading-relaxed max-w-xl">
+            {identity.pitch}
+          </p>
 
-          <div className="mt-8 flex flex-wrap gap-4">
+          {/* Core Action CTAs */}
+          <div className="mt-8 flex flex-wrap items-center gap-3.5">
             <a
               href="#projects"
-              className="bg-grad rounded-full px-6 py-3 text-sm font-semibold text-white transition-transform hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-black shadow-md shadow-emerald-500/20 transition-all hover:bg-emerald-400 hover:shadow-emerald-500/30 active:scale-95"
             >
-              View Projects
+              View Production Projects
+            </a>
+            <a
+              href="#devops"
+              className="inline-flex items-center justify-center rounded-xl border border-line bg-panel px-5 py-2.5 text-sm font-semibold text-fg transition-all hover:border-slate-600 hover:bg-panel-2 active:scale-95"
+            >
+              DevOps Architecture Specs
             </a>
             <a
               href="#contact"
-              className="rounded-full border border-line bg-panel px-6 py-3 text-sm font-semibold transition-transform hover:-translate-y-0.5"
+              className="inline-flex items-center justify-center rounded-xl border border-line bg-panel px-4 py-2.5 text-sm font-semibold text-mut hover:text-fg hover:border-slate-600 hover:bg-panel-2 transition-colors"
             >
               Get in Touch
             </a>
           </div>
 
-          <dl className="mt-10 flex gap-8">
-            {stats.map((s) => (
-              <div key={s.label}>
-                <dt className="sr-only">{s.label}</dt>
-                <dd className="text-2xl font-extrabold text-grad">{s.value}</dd>
-                <dd className="mt-1 text-xs text-mut">{s.label}</dd>
-              </div>
-            ))}
+          {/* Quantifiable Impact Metrics */}
+          <dl className="mt-10 grid grid-cols-3 gap-4 border-t border-line/70 pt-6">
+            <div>
+              <dt className="sr-only">Experience</dt>
+              <dd className="font-mono text-2xl font-extrabold text-fg sm:text-3xl">
+                {stats[0]?.value || '2+'}
+              </dd>
+              <dd className="mt-1 text-xs text-mut font-medium">years hands-on exp</dd>
+            </div>
+            <div>
+              <dt className="sr-only">CI/CD & Security</dt>
+              <dd className="font-mono text-2xl font-extrabold text-emerald-400 sm:text-3xl">
+                100%
+              </dd>
+              <dd className="mt-1 text-xs text-mut font-medium">automated CI gates</dd>
+            </div>
+            <div>
+              <dt className="sr-only">Shipped Projects</dt>
+              <dd className="font-mono text-2xl font-extrabold text-cyan-400 sm:text-3xl">
+                {stats[1]?.value || '8'}
+              </dd>
+              <dd className="mt-1 text-xs text-mut font-medium">projects shipped</dd>
+            </div>
           </dl>
         </div>
 
-        {/* right: fake IDE code card (stays dark in both themes) */}
-        <div className="reveal">
-          <div className="overflow-hidden rounded-2xl border border-[#252538] bg-[#13131e] shadow-2xl">
-            <div className="flex items-center gap-2 border-b border-[#252538] px-4 py-3">
-              <span className="h-3 w-3 rounded-full bg-[#ff5f57]" aria-hidden="true" />
-              <span className="h-3 w-3 rounded-full bg-[#febc2e]" aria-hidden="true" />
-              <span className="h-3 w-3 rounded-full bg-[#28c840]" aria-hidden="true" />
-              <span className="ml-3 font-mono text-xs text-[#636382]">developer.ts</span>
-            </div>
-            <pre className="overflow-x-auto p-5 font-mono text-sm leading-7 text-[#e8e8f4]">
-              <code>
-                <K>const</K> <T>developer</T> <P>= {'{'}</P>
-                {'\n  '}name<P>:</P> <S>{`'${identity.name}'`}</S>
-                <P>,</P>
-                {'\n  '}role<P>:</P> <S>{`'${identity.role}'`}</S>
-                <P>,</P>
-                {'\n  '}stack<P>: [</P>
-                {topSkills.map((s, i) => (
-                  <span key={s}>
-                    <S>{`'${s}'`}</S>
-                    {i < topSkills.length - 1 && <P>, </P>}
-                  </span>
-                ))}
-                <P>],</P>
-                {'\n  '}hireable<P>:</P> <K>true</K>
-                <P>,</P>
-                {'\n'}
-                <P>{'}'}</P>
-                <span className="caret" aria-hidden="true" />
-              </code>
-            </pre>
-          </div>
+        {/* Right Column: Live Interactive Architecture Pipeline */}
+        <div className="reveal lg:col-span-6">
+          <InteractivePipeline />
         </div>
       </div>
     </section>

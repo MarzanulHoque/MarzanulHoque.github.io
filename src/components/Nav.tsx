@@ -44,23 +44,32 @@ export default function Nav() {
   }, [])
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-line bg-ink/80 backdrop-blur">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-line/80 bg-ink/85 backdrop-blur-md">
       <div
-        className="line-grad absolute inset-x-0 top-0 h-0.5 origin-left"
+        className="line-grad absolute inset-x-0 top-0 h-0.5 origin-left transition-transform duration-100"
         style={{ transform: `scaleX(${progress})` }}
         aria-hidden="true"
       />
-      <nav className="mx-auto flex max-w-5xl items-center justify-between px-6 py-4">
-        <a href="#top" className="font-mono text-sm font-bold">
-          <span className="text-grad">{identity.name}</span>
-        </a>
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3.5">
+        <div className="flex items-center gap-3">
+          <a href="#top" className="font-mono text-sm font-bold text-fg hover:text-emerald-400 transition-colors">
+            <span>{identity.name}</span>
+          </a>
+          {/* Systems Telemetry Pill */}
+          <span className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-2.5 py-0.5 font-mono text-[11px] text-emerald-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span>Systems Live · AWS EC2</span>
+          </span>
+        </div>
 
         <div className="hidden items-center gap-6 sm:flex">
           {sections.map(({ id, label }) => (
             <a
               key={id}
               href={`#${id}`}
-              className={`text-sm transition-colors ${active === id ? 'font-semibold text-vio' : 'text-mut hover:text-fg'}`}
+              className={`text-xs font-medium tracking-wide uppercase font-mono transition-colors ${
+                active === id ? 'font-bold text-emerald-400' : 'text-mut hover:text-fg'
+              }`}
             >
               {label}
             </a>
@@ -91,7 +100,7 @@ export default function Nav() {
               key={id}
               href={`#${id}`}
               onClick={() => setOpen(false)}
-              className={`block py-2 text-sm ${active === id ? 'font-semibold text-vio' : 'text-mut'}`}
+              className={`block py-2 text-sm font-mono ${active === id ? 'font-bold text-emerald-400' : 'text-mut'}`}
             >
               {label}
             </a>
